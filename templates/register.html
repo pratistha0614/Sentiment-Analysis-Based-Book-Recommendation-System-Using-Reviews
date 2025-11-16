@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Book Recommender</title>
+    <link rel="icon" href="templates/open-book.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            text-decoration: none;
+        }
+        
+        .nav > li > a {
+            color: #34495e !important;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav > li > a:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db !important;
+        }
+        
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 50px;
+            width: 100%;
+            max-width: 450px;
+            backdrop-filter: blur(10px);
+            margin-top: 80px;
+        }
+        
+        .register-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .register-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .register-subtitle {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+        
+        .form-control:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+            background: white;
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: transform 0.3s ease;
+            margin-bottom: 20px;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .btn-login {
+            background: transparent;
+            border: 2px solid #3498db;
+            color: #3498db;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-login:hover {
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .flashes {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .flashes li {
+            margin-bottom: 10px;
+        }
+        .invalid {
+            border-color: #e74c3c !important;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">📚 Book Recommender</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/About">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="register-container">
+        <div class="register-header">
+            <h1 class="register-title">Join Us</h1>
+            <p class="register-subtitle">Create your account to get started</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <ul class="flashes">
+                {% for category, message in messages %}
+                    <li class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'warning' }}">
+                        {{ message }}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+            <form method="POST" id="registerForm" novalidate>
+                <div class="form-group">
+                    <label for="username">👤 Username</label>
+                    <input type="text" class="form-control{% if errors and errors.username %} invalid{% endif %}" id="username" name="username" placeholder="Choose a username" value="{{ form_data.username if form_data and form_data.username else '' }}" required>
+                    <div id="usernameError" class="text-danger" style="margin-top:6px;{% if errors and errors.username %}display:block;{% else %}display:none;{% endif %}">{{ errors.username if errors and errors.username }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="email">✉️ Email address</label>
+                    <input type="email" class="form-control{% if errors and errors.email %} invalid{% endif %}" id="email" name="email" placeholder="name@example.com" value="{{ form_data.email if form_data and form_data.email else '' }}" required>
+                    <div id="emailError" class="text-danger" style="margin-top:6px;{% if errors and errors.email %}display:block;{% else %}display:none;{% endif %}">{{ errors.email if errors and errors.email }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="phone">📞 Phone number</label>
+                    <input type="text" class="form-control{% if errors and errors.phone %} invalid{% endif %}" id="phone" name="phone" placeholder="Enter 10-digit number" value="{{ form_data.phone if form_data and form_data.phone else '' }}" required>
+                    <div id="phoneError" class="text-danger" style="margin-top:6px;{% if errors and errors.phone %}display:block;{% else %}display:none;{% endif %}">{{ errors.phone if errors and errors.phone }}</div>
+                </div>
+                <div class="form-group">
+                    <label for="password">🔒 Password</label>
+                    <input type="password" class="form-control{% if errors and errors.password %} invalid{% endif %}" id="password" name="password" placeholder="Create a password" required>
+                    <div id="passwordError" class="text-danger" style="margin-top:6px;{% if errors and errors.password %}display:block;{% else %}display:none;{% endif %}">{{ errors.password if errors and errors.password }}</div>
+                </div>
+                <button type="submit" id="submitBtn" class="btn btn-register">Submit</button>
+            </form>
+            
+            <a href="/login" class="btn-login">Already have an account? Sign in here</a>
+        </div>
+        <script>
+            const form = document.getElementById('registerForm');
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            const phoneInput = document.getElementById('phone');
+            const passwordInput = document.getElementById('password');
+
+            function setError(el, message) {
+                const err = document.getElementById(el.id + 'Error');
+                if (err) {
+                    err.textContent = message;
+                    err.style.display = 'block';
+                }
+                el.classList.add('invalid');
+            }
+
+            function clearError(el) {
+                const err = document.getElementById(el.id + 'Error');
+                if (err) {
+                    err.textContent = '';
+                    err.style.display = 'none';
+                }
+                el.classList.remove('invalid');
+            }
+
+            function clearAllErrors() {
+                [usernameInput, emailInput, phoneInput, passwordInput].forEach(clearError);
+            }
+
+            form.addEventListener('submit', function (e) {
+                clearAllErrors();
+                let hasErrors = false;
+
+                const u = (usernameInput.value || '').trim();
+                if (!/^[A-Za-z][A-Za-z0-9_]{2,}$/.test(u)) { setError(usernameInput, 'Username must start with a letter and be at least 3 characters long'); hasErrors = true; }
+
+                const em = (emailInput.value || '').trim();
+                const emailRe = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
+                if (!emailRe.test(em)) { setError(emailInput, 'Please enter a valid email address'); hasErrors = true; }
+
+                const ph = (phoneInput.value || '').trim();
+                if (!/^\d{10}$/.test(ph)) { setError(phoneInput, 'Phone number must be exactly 10 digits'); hasErrors = true; }
+
+                const pw = passwordInput.value || '';
+                if (pw.length < 8) { setError(passwordInput, 'Password must be at least 8 characters'); hasErrors = true; }
+
+                if (hasErrors) {
+                    e.preventDefault();
+                }
+            });
+        </script>
+    </body>
+    </html>

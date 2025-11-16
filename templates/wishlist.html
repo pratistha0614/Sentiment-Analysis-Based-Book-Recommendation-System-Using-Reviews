@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>My Wishlist - Book Recommender</title>
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
+    />
+    <style>
+      .wishlist-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+      }
+      .wishlist-title {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .wishlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 24px;
+      }
+      .wishlist-card {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 18px;
+        text-align: center;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.06);
+      }
+      .wishlist-card img {
+        max-width: 120px;
+        height: auto;
+        margin-bottom: 12px;
+        border-radius: 6px;
+      }
+      .wishlist-card .book-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin-bottom: 6px;
+      }
+      .wishlist-card .book-author {
+        color: #666;
+        font-size: 0.98rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">📚 Book Recommender</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li class="active"><a href="/wishlist">Wishlist</a></li>
+          <li><a href="/About">About</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if session.get('user_id') %}
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/logout">Logout</a></li>
+          {% else %}
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+    <div class="wishlist-container">
+      <h2 class="wishlist-title">My Wishlist</h2>
+      {% if wishlist and wishlist|length > 0 %}
+      <div class="wishlist-grid">
+        {% for book in wishlist %}
+        <div class="wishlist-card">
+          <img src="{{ book.image }}" alt="{{ book.title }}" />
+          <div class="book-title">{{ book.title }}</div>
+          <div class="book-author">by {{ book.author }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="text-align: center; color: #888; padding: 40px">
+        <p>Your wishlist is empty. Start adding books you love!</p>
+      </div>
+      {% endif %}
+    </div>
+  </body>
+</html>

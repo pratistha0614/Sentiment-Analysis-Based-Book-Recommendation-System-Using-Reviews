@@ -1,0 +1,12 @@
+# Core web framework
+flask
+
+# Numerical operations for recommendations
+numpy
+
+# BERT sentiment analysis (optional - lazy loaded)
+transformers>=4.30.0
+torch>=2.0.0
+
+# Note: SQLite3 and Pickle are built-in to Python
+# Note: Werkzeug is included with Flask 

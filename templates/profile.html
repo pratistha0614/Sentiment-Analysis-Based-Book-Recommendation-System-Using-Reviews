@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Profile - Book Recommender</title>
+    <link rel="icon" href="templates/open-book.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary: #667eea;
+        --secondary: #764ba2;
+        --bg: #f8f9fa;
+        --card-bg: #fff;
+        --text: #222f3e;
+        --muted: #7f8c8d;
+        --border: #e9ecef;
+        --accent: #ff758c;
+        --admin: #ff7eb3;
+        --radius: 20px;
+        --shadow: 0 8px 32px rgba(102, 126, 234, 0.1),
+          0 1.5px 8px rgba(118, 75, 162, 0.08);
+      }
+      body.dark-mode {
+        --bg: #181a1b;
+        --card-bg: #23272f;
+        --text: #f8f9fa;
+        --muted: #b0b3b8;
+        --border: #333;
+        --shadow: 0 8px 32px rgba(102, 126, 234, 0.18),
+          0 1.5px 8px rgba(118, 75, 162, 0.18);
+      }
+      .profile-main {
+        max-width: 1100px;
+        margin: 40px auto;
+        background: var(--bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 0 0 30px 0;
+      }
+      .profile-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 30px;
+        padding: 40px 40px 0 40px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        border-radius: var(--radius) var(--radius) 0 0;
+        color: #fff;
+        position: relative;
+      }
+      .profile-avatar-wrapper {
+        position: relative;
+        display: inline-block;
+      }
+      .profile-avatar {
+        width: 110px;
+        height: 110px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid #fff;
+        box-shadow: 0 4px 16px rgba(102, 126, 234, 0.15);
+        background: #fff;
+      }
+      .profile-avatar-upload {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        background: var(--primary);
+        color: #fff;
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.13);
+        transition: background 0.2s;
+        font-size: 1.2rem;
+      }
+      .profile-avatar-upload:hover {
+        background: var(--secondary);
+      }
+      .profile-avatar-upload input[type="file"] {
+        display: none;
+      }
+      .profile-avatar-remove {
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #e74c3c;
+        color: #fff;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        border: 2px solid #fff;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.13);
+        transition: background 0.2s;
+        font-size: 1.1rem;
+        z-index: 2;
+      }
+      .profile-avatar-remove:hover {
+        background: #c0392b;
+      }
+      .profile-avatar-remove button {
+        background: none;
+        border: none;
+        color: inherit;
+        font: inherit;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+      }
+      .profile-info {
+        flex: 1 1 200px;
+        min-width: 200px;
+      }
+      .profile-username {
+        font-size: 2.1rem;
+        font-weight: 700;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .role-badge {
+        display: inline-block;
+        font-size: 1.05rem;
+        font-weight: 600;
+        padding: 5px 16px;
+        border-radius: 16px;
+        background: linear-gradient(
+          135deg,
+          var(--accent) 0%,
+          var(--admin) 100%
+        );
+        color: #fff;
+        margin-left: 8px;
+        letter-spacing: 0.5px;
+        vertical-align: middle;
+      }
+      .role-badge.user {
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+      }
+      .edit-profile-btn {
+        background: #fff;
+        color: var(--primary);
+        border: none;
+        border-radius: 16px;
+        padding: 8px 18px;
+        font-weight: 600;
+        margin-top: 10px;
+        transition: background 0.2s, color 0.2s;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.07);
+      }
+      .edit-profile-btn:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+      .dark-toggle {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        font-size: 1.3rem;
+        color: #fff;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+      }
+      .dark-toggle:hover {
+        opacity: 1;
+      }
+      .profile-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border);
+        margin: 0 40px;
+        margin-top: 30px;
+        overflow-x: auto;
+      }
+      .profile-tab {
+        flex: 1 1 120px;
+        text-align: center;
+        padding: 18px 0 12px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--muted);
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        transition: color 0.2s, border 0.2s;
+        outline: none;
+      }
+      .profile-tab.active {
+        color: var(--primary);
+        border-bottom: 3px solid var(--primary);
+        background: var(--bg);
+      }
+      .tab-content {
+        padding: 30px 40px 0 40px;
+      }
+      .card-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 24px;
+      }
+      .card {
+        background: var(--card-bg);
+        border-radius: 16px;
+        box-shadow: 0 2px 12px rgba(102, 126, 234, 0.08);
+        padding: 24px 18px 18px 18px;
+        transition: box-shadow 0.2s, transform 0.2s;
+        position: relative;
+      }
+      .card:hover {
+        box-shadow: 0 8px 32px rgba(102, 126, 234, 0.13);
+        transform: translateY(-3px) scale(1.01);
+      }
+      .card-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .card .fa,
+      .card .fas,
+      .card .far {
+        color: var(--primary);
+      }
+      .card-content {
+        color: var(--text);
+        font-size: 1.01rem;
+      }
+      .recommendations-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 18px;
+        margin-top: 10px;
+      }
+      .recommendation-card {
+        background: var(--card-bg);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+      .recommendation-card:hover {
+        transform: translateY(-5px);
+      }
+      .recommendation-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+      .recommendation-info {
+        padding: 20px;
+      }
+      .recommendation-title {
+        font-weight: 600;
+        color: var(--text);
+        margin-bottom: 8px;
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+      .recommendation-author {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 10px;
+      }
+      /* Force-hide any legacy similarity badges */
+      .similarity-score { display: none !important; }
+      .sentiment-indicator {
+        font-size: 0.8rem;
+        padding: 4px 10px;
+        border-radius: 15px;
+        font-weight: 500;
+        display: inline-block;
+      }
+      .no-content {
+        text-align: center;
+        color: var(--muted);
+        font-style: italic;
+        padding: 40px;
+        background: var(--bg);
+        border-radius: 12px;
+      }
+      @media (max-width: 900px) {
+        .profile-header,
+        .tab-content {
+          padding: 20px 10px 0 10px;
+        }
+        .profile-tabs {
+          margin: 0 10px;
+        }
+      }
+      @media (max-width: 600px) {
+        .profile-header {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 18px;
+        }
+        .profile-avatar {
+          width: 70px;
+          height: 70px;
+        }
+        .profile-username {
+          font-size: 1.3rem;
+        }
+        .tab-content {
+          padding: 18px 4px 0 4px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">📚 Book Recommender</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li><a href="/">Home</a></li>
+          <li><a href="/About">About</a></li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/logout">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="profile-main">
+      <div class="profile-header">
+        <div class="profile-avatar-wrapper">
+          {% if profile_pic %}
+          <img
+            src="/static/profile_pics/{{ profile_pic }}"
+            class="profile-avatar"
+            alt="avatar"
+          />
+          <form
+            method="POST"
+            action="/remove_profile_pic"
+            style="display: inline"
+            onsubmit="return confirm('Remove your profile picture?');"
+          >
+            <span class="profile-avatar-remove">
+              <button
+                type="submit"
+                title="Remove profile picture"
+                style="
+                  background: none;
+                  border: none;
+                  color: inherit;
+                  cursor: pointer;
+                "
+              >
+                <i class="fa fa-times"></i>
+              </button>
+            </span>
+          </form>
+          {% else %}
+          <img
+            src="https://api.dicebear.com/7.x/identicon/svg?seed={{ username|urlencode }}"
+            class="profile-avatar"
+            alt="avatar"
+          />
+          {% endif %}
+          <form
+            method="POST"
+            action="/upload_profile_pic"
+            enctype="multipart/form-data"
+            id="profilePicForm"
+          >
+            <label class="profile-avatar-upload" title="Change profile picture">
+              <i class="fa fa-camera"></i>
+              <input
+                type="file"
+                name="profile_pic"
+                accept="image/*"
+                onchange="document.getElementById('profilePicForm').submit();"
+              />
+            </label>
+          </form>
+        </div>
+        <div class="profile-info">
+          <div class="profile-username">
+            {{ username }}
+            <span class="role-badge {{ 'admin' if is_admin() else 'user' }}">
+              <i class="fa fa-user{{ '-shield' if is_admin() else '' }}"></i>
+              {{ 'Admin' if is_admin() else 'User' }}
+            </span>
+          </div>
+          <button class="edit-profile-btn">
+            <i class="fa fa-edit"></i> Edit Profile
+          </button>
+        </div>
+        <span class="dark-toggle" id="darkToggle" title="Toggle dark mode"
+          ><i class="fa fa-moon"></i
+        ></span>
+      </div>
+      <div class="profile-tabs" id="profileTabs">
+        <button class="profile-tab active" data-tab="overview">
+          <i class="fa fa-home"></i> Overview
+        </button>
+        <button class="profile-tab" data-tab="reviews">
+          <i class="fa fa-star"></i> Reviews
+        </button>
+        <button class="profile-tab" data-tab="wishlist">
+          <i class="fa fa-heart"></i> Wishlist
+        </button>
+        <button class="profile-tab" data-tab="search">
+          <i class="fa fa-search"></i> Search History
+        </button>
+        <button class="profile-tab" data-tab="recommend">
+          <i class="fa fa-magic"></i> Recommendations
+        </button>
+        {% if is_admin() %}
+        <button class="profile-tab" data-tab="admin">
+          <i class="fa fa-tools"></i> Admin
+        </button>
+        {% endif %}
+      </div>
+      <div class="tab-content" id="tab-overview">
+        <div class="card-list">
+          <div class="card">
+            <div class="card-title"><i class="fa fa-star"></i> Reviews</div>
+            <div class="card-content">
+              {{ user_reviews|length }} reviews submitted
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title"><i class="fa fa-heart"></i> Wishlist</div>
+            <div class="card-content">
+              {{ wishlist_count if wishlist_count is defined else '?' }} books
+              in wishlist
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-search"></i> Search History
+            </div>
+            <div class="card-content">
+              {{ user_recommendations|length if user_recommendations is defined
+              else '?' }} searches
+            </div>
+          </div>
+          {% if is_admin() %}
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-users"></i> Total Users
+            </div>
+            <div class="card-content">
+              {{ total_users if total_users is defined else '?' }}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-comments"></i> Total Reviews
+            </div>
+            <div class="card-content">
+              {{ total_reviews if total_reviews is defined else '?' }}
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-heart"></i> Total Wishlists
+            </div>
+            <div class="card-content">
+              {{ total_wishlists if total_wishlists is defined else '?' }}
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="tab-content" id="tab-reviews" style="display: none">
+        <div class="card-list">
+          {% for book_title, review_text, sentiment in user_reviews %}
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-book"></i> {{ book_title }}
+            </div>
+            <div class="card-content">
+              {{ review_text }}<br />
+              <span
+                class="sentiment-indicator sentiment-{{ sentiment.lower() }}"
+                >{{ sentiment }}</span
+              >
+            </div>
+          </div>
+          {% else %}
+          <div class="no-content">No reviews yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="tab-content" id="tab-wishlist" style="display: none">
+        <div class="card-list">
+          {% if wishlist %} {% for book in wishlist %}
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-book"></i> {{ book.title }}
+            </div>
+            <div class="card-content">by {{ book.author }}</div>
+          </div>
+          {% endfor %} {% else %}
+          <div class="no-content">No wishlist items yet.</div>
+          {% endif %}
+        </div>
+      </div>
+      <div class="tab-content" id="tab-search" style="display: none">
+        <div class="card-list">
+          {% for book_title, timestamp in user_recommendations %}
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-search"></i> {{ book_title }}
+            </div>
+            <div class="card-content">
+              <span class="fa fa-clock"></span> {{ timestamp }}
+            </div>
+          </div>
+          {% else %}
+          <div class="no-content">No search history yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="tab-content" id="tab-recommend" style="display: none">
+        <div class="recommendations-grid">
+          {% for book in user_recommended_books %}
+          <div class="recommendation-card">
+            <a
+              href="/book_details/{{ book[0]|urlencode }}"
+              style="text-decoration: none; color: inherit"
+            >
+              <img
+                class="recommendation-image"
+                src="{{ book[3] }}"
+                alt="{{ book[0] }}"
+              />
+              <div class="recommendation-info">
+                <div class="recommendation-title">{{ book[0] }}</div>
+                <div class="recommendation-author">by {{ book[2] }}</div>
+                <div class="match-info">
+                  Recommended based on overall review sentiment
+                </div>
+                {% if book[4] > 0 %}
+                <div class="sentiment-indicator sentiment-positive">
+                  😊 Positive Reviews
+                </div>
+                {% elif book[4] < 0 %}
+                <div class="sentiment-indicator sentiment-negative">
+                  😞 Mixed Reviews
+                </div>
+                {% else %}
+                <div class="sentiment-indicator sentiment-neutral">
+                  😐 No Reviews Yet
+                </div>
+                {% endif %}
+              </div>
+            </a>
+          </div>
+          {% else %}
+          <div class="no-content">No recommendations yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+      {% if is_admin() %}
+      <div class="tab-content" id="tab-admin" style="display: none">
+        <div class="card-list">
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-users"></i> Manage Users
+            </div>
+            <div class="card-content">
+              <a href="/admin_users" class="admin-link"
+                >Go to User Management</a
+              >
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-comments"></i> Review Moderation
+            </div>
+            <div class="card-content">
+              <a href="/admin_reviews" class="admin-link"
+                >Go to Review Moderation</a
+              >
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-heart"></i> Manage Wishlists
+            </div>
+            <div class="card-content">
+              <a href="/admin_wishlist" class="admin-link">Go to Wishlists</a>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-chart-bar"></i> Site Statistics
+            </div>
+            <div class="card-content">
+              <iframe
+                src="/admin_stats"
+                style="width: 100%; height: 320px; border: none"
+              ></iframe>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">
+              <i class="fa fa-search"></i> Search History
+            </div>
+            <div class="card-content">
+              <a href="/admin_search_history" class="admin-link"
+                >Go to Search History</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <script>
+      // Tab switching
+      const tabs = document.querySelectorAll(".profile-tab");
+      const tabContents = document.querySelectorAll(".tab-content");
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", function () {
+          tabs.forEach((t) => t.classList.remove("active"));
+          tabContents.forEach((tc) => (tc.style.display = "none"));
+          this.classList.add("active");
+          document.getElementById("tab-" + this.dataset.tab).style.display = "";
+        });
+      });
+      // Dark mode toggle
+      document.getElementById("darkToggle").onclick = function () {
+        document.body.classList.toggle("dark-mode");
+        localStorage.setItem(
+          "profileDarkMode",
+          document.body.classList.contains("dark-mode")
+        );
+      };
+      if (localStorage.getItem("profileDarkMode") === "true") {
+        document.body.classList.add("dark-mode");
+      }
+    </script>
+  </body>
+</html>

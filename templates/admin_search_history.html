@@ -1,0 +1,69 @@
+{% extends 'index.html' %} {% block content %}
+<style>
+  .admin-search-bg {
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    min-height: 100vh;
+    padding: 0;
+  }
+  .admin-search-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(52, 152, 219, 0.1);
+    padding: 32px 24px;
+    margin: 40px auto 0 auto;
+    max-width: 1000px;
+  }
+  .admin-search-title {
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #222f3e;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .table thead th {
+    background: #2980b9;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.08rem;
+    border: none;
+  }
+  .table tbody td {
+    color: #222f3e;
+    background: #f8fafc;
+    vertical-align: middle;
+    font-size: 1.05rem;
+  }
+  .table-striped > tbody > tr:nth-of-type(odd) > td {
+    background: #e3f0ff;
+  }
+</style>
+<div class="admin-search-bg">
+  <div class="admin-search-card">
+    <h2 class="admin-search-title">Search History</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>User</th>
+            <th>Search Query</th>
+            <th>Type</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for search in history %}
+          <tr>
+            <td>{{ search.id }}</td>
+            <td>{{ search.username }}</td>
+            <td>{{ search.book_title }}</td>
+            <td>{{ search.search_type }}</td>
+            <td>{{ search.timestamp }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

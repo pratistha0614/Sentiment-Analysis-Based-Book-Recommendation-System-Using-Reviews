@@ -1,0 +1,94 @@
+{% extends 'index.html' %} {% block content %}
+<style>
+  .admin-wishlist-bg {
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
+    min-height: 100vh;
+    padding: 0;
+  }
+  .admin-wishlist-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 24px rgba(52, 152, 219, 0.1);
+    padding: 32px 24px;
+    margin: 40px auto 0 auto;
+    max-width: 900px;
+  }
+  .admin-wishlist-title {
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    color: #222f3e;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  .table thead th {
+    background: #8e44ad;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.08rem;
+    border: none;
+  }
+  .table tbody td {
+    color: #222f3e;
+    background: #f8fafc;
+    vertical-align: middle;
+    font-size: 1.05rem;
+  }
+  .table-striped > tbody > tr:nth-of-type(odd) > td {
+    background: #f3e3ff;
+  }
+  .admin-action-btn {
+    font-size: 0.98rem;
+    border-radius: 6px;
+    margin-right: 6px;
+    font-weight: 600;
+    padding: 5px 14px;
+  }
+</style>
+<div class="admin-wishlist-bg">
+  <div class="admin-wishlist-card">
+    <h2 class="admin-wishlist-title">All Wishlist Items</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Book Title</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in wishlist %}
+          <tr>
+            <td>{{ item['id'] }}</td>
+            <td>{{ item['username'] }}</td>
+            <td>{{ item['book_title'] }}</td>
+            <td>
+              <form
+                action="{{ url_for('admin_delete_wishlist', wishlist_id=item['id']) }}"
+                method="post"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-danger admin-action-btn"
+                  onclick="return confirm('Delete wishlist item?')"
+                >
+                  Delete
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <a
+      href="{{ url_for('admin_dashboard') }}"
+      class="btn btn-secondary"
+      style="margin-top: 18px"
+      >Back to Admin Dashboard</a
+    >
+  </div>
+</div>
+{% endblock %}

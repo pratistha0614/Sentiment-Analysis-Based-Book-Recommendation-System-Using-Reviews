@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Book Recommender System</title>
+    <link rel="icon" href="templates/open-book.png" type="image/x-icon" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <meta
+      http-equiv="Cache-Control"
+      content="no-cache, no-store, must-revalidate"
+    />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .navbar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: none;
+        box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        padding: 15px 0;
+      }
+
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.5rem;
+        color: #2c3e50 !important;
+        text-decoration: none;
+      }
+
+      .nav > li > a {
+        color: #34495e !important;
+        font-weight: 500;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+      }
+
+      .nav > li > a:hover {
+        background: rgba(52, 152, 219, 0.1);
+        color: #3498db !important;
+      }
+
+      /* History Dropdown Styles */
+      .history-dropdown {
+        min-width: 320px;
+        max-width: 400px;
+        max-height: 450px;
+        overflow-y: auto;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background: white;
+        border: 1px solid #ddd;
+        z-index: 1050;
+      }
+
+      .history-item {
+        padding: 15px 20px !important;
+        border-bottom: 1px solid #f0f0f0;
+        display: block;
+        text-decoration: none;
+        color: #333 !important;
+        transition: all 0.2s ease;
+        cursor: pointer;
+      }
+
+      .history-item:hover {
+        background-color: #f8f9fa !important;
+        color: #3498db !important;
+        transform: translateX(3px);
+      }
+
+      .history-type {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 5px;
+        font-size: 1.1rem;
+        line-height: 1.3;
+      }
+
+      .history-time {
+        color: #7f8c8d;
+        font-size: 0.95rem;
+        font-weight: 400;
+      }
+
+      .dropdown-header {
+        background-color: #f8f9fa;
+        color: #495057;
+        font-weight: 600;
+        padding: 12px 20px;
+        border-bottom: 1px solid #dee2e6;
+        font-size: 1.1rem;
+      }
+
+      .dropdown-subheader {
+        background-color: #e9ecef;
+        color: #6c757d;
+        font-weight: 500;
+        font-size: 1rem;
+        padding: 10px 20px;
+        border-bottom: 1px solid #dee2e6;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      #clear-history {
+        padding: 12px 20px !important;
+        font-size: 1rem !important;
+        font-weight: 500 !important;
+        color: #dc3545 !important;
+        text-align: center;
+        background-color: #fff5f5;
+        border-top: 1px solid #f0f0f0;
+        transition: all 0.2s ease;
+      }
+
+      #clear-history:hover {
+        background-color: #f8d7da !important;
+        color: #721c24 !important;
+        transform: none;
+      }
+
+      /* Custom scrollbar */
+      .history-dropdown::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .history-dropdown::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 3px;
+      }
+
+      .history-dropdown::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+
+      .history-dropdown::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+
+      /* Responsive adjustments */
+      @media (max-width: 768px) {
+        .history-dropdown {
+          min-width: 280px;
+          max-width: 90vw;
+        }
+      }
+
+      .dropdown-menu > li > a {
+        padding: 8px 15px;
+      }
+
+      .dropdown-menu > li > a:hover {
+        background-color: #f8f9fa;
+        color: #3498db;
+      }
+
+      .hero-section {
+        text-align: center;
+        padding: 60px 0;
+        color: white;
+      }
+
+      .hero-title {
+        font-size: 3.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .hero-subtitle {
+        font-size: 1.3rem;
+        opacity: 0.9;
+        margin-bottom: 40px;
+      }
+
+      .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .section-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+        overflow: hidden;
+        backdrop-filter: blur(10px);
+      }
+
+      .section-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        text-align: center;
+      }
+
+      .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+      }
+
+      .section-subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
+      }
+
+      .section-content {
+        padding: 40px;
+      }
+
+      .search-form {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+      }
+
+      .search-form .row {
+        margin: 0;
+      }
+
+      .search-form .col-sm-12,
+      .search-form .col-md-4,
+      .search-form .col-md-5,
+      .search-form .col-md-2 {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .search-form label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: #2c3e50;
+        white-space: nowrap;
+      }
+
+      .search-dropdown {
+        min-width: 200px !important;
+        width: 100% !important;
+        max-width: 300px !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        font-size: 1.1rem !important;
+        padding: 15px 20px !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+        line-height: 1.4 !important;
+      }
+
+      .search-dropdown option {
+        padding: 15px 20px !important;
+        font-size: 1.1rem !important;
+        white-space: nowrap !important;
+        min-width: 200px !important;
+        height: 40px !important;
+        line-height: 1.4 !important;
+      }
+
+      /* Force the dropdown to be tall enough */
+      #search_type {
+        min-width: 200px !important;
+        width: 100% !important;
+        height: 50px !important;
+        min-height: 50px !important;
+        box-sizing: border-box !important;
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+        text-align: left !important;
+        padding: 15px 20px !important;
+        font-size: 1.1rem !important;
+        line-height: 1.4 !important;
+      }
+
+      /* Ensure dropdown options are fully visible */
+      .search-dropdown:focus {
+        min-width: 250px !important;
+        width: 100% !important;
+        height: 50px !important;
+      }
+
+      /* Ensure selected text is fully visible */
+      .search-dropdown option:checked {
+        background-color: #3498db !important;
+        color: white !important;
+        padding: 10px 15px !important;
+      }
+
+      /* Additional styling for better text visibility */
+      .search-dropdown {
+        background-color: white !important;
+        border: 2px solid #e9ecef !important;
+        border-radius: 10px !important;
+      }
+
+      .search-dropdown:focus {
+        border-color: #3498db !important;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25) !important;
+      }
+
+      /* Responsive design for search form */
+      @media (max-width: 768px) {
+        .search-form .col-sm-12 {
+          margin-bottom: 15px;
+        }
+
+        .search-form .col-sm-12:last-child {
+          margin-bottom: 0;
+        }
+      }
+
+      .search-form h3 {
+        color: #2c3e50;
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-control {
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 12px 15px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+      }
+
+      .btn-search {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: transform 0.3s ease;
+      }
+
+      .btn-search:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .recommendation-form {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+        text-align: center;
+      }
+
+      .recommendation-form h3 {
+        margin-bottom: 20px;
+        font-weight: 600;
+      }
+
+      .btn-recommend {
+        background: rgba(255, 255, 255, 0.2);
+        border: 2px solid white;
+        color: white;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      .btn-recommend:hover {
+        background: white;
+        color: #f5576c;
+        transform: translateY(-2px);
+      }
+
+      .books-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .book-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+      }
+
+      .book-card a {
+        display: block;
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .book-card-link {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+        height: 100%;
+      }
+
+      .book-card-link:hover {
+        text-decoration: none;
+        color: inherit;
+      }
+
+      .book-card-link:hover .book-card {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+      }
+
+      .book-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+      }
+
+      .book-info {
+        padding: 15px;
+      }
+
+      .book-title {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #2c3e50;
+        margin-bottom: 6px;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .book-author {
+        color: #7f8c8d;
+        font-size: 0.85rem;
+        margin-bottom: 8px;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .book-stats {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #95a5a6;
+      }
+
+      .book-rating {
+        color: #f39c12;
+        font-weight: 600;
+      }
+
+      .book-votes {
+        color: #95a5a6;
+      }
+
+      .recommendations-section {
+        margin-top: 40px;
+      }
+
+      .recommendation-card {
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+        margin-bottom: 20px;
+      }
+
+      .recommendation-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .recommendation-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+      }
+
+      .recommendation-content {
+        padding: 20px;
+      }
+
+      .similarity-score {
+        background: #e8f4fd;
+        color: #2980b9;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: inline-block;
+        margin-bottom: 10px;
+      }
+
+      .sentiment-indicator {
+        font-size: 0.9rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 500;
+        display: inline-block;
+      }
+
+      .sentiment-positive {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .sentiment-negative {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .sentiment-neutral {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .no-results {
+        text-align: center;
+        color: #7f8c8d;
+        font-style: italic;
+        padding: 40px;
+        background: #f8f9fa;
+        border-radius: 15px;
+      }
+
+      .alert {
+        border-radius: 10px;
+        border: none;
+        padding: 15px 20px;
+        margin-bottom: 20px;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      /* Force-hide any legacy similarity badges leftover from cached templates */
+      .similarity-score {
+        display: none !important;
+      }
+
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.5rem;
+        }
+
+        .books-grid {
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 15px;
+        }
+
+        .main-container {
+          padding: 0 15px;
+        }
+
+        .section-content {
+          padding: 20px;
+        }
+
+        .book-info {
+          padding: 12px;
+        }
+
+        .book-title {
+          font-size: 0.9rem;
+        }
+
+        .book-author {
+          font-size: 0.8rem;
+        }
+
+        .book-stats {
+          font-size: 0.75rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .books-grid {
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="/">📚 Book Recommender</a>
+        </div>
+        <ul class="nav navbar-nav">
+            <li><a href="/">Home</a></li>
+            <li><a href="/wishlist">Wishlist</a></li>
+            <li><a href="/About">About</a></li>
+            {% if session.get('user_id') and is_admin() %}
+            <li><a href="{{ url_for('admin_dashboard') }}">Admin Dashboard</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          {% if session.get('user_id') %}
+          <li class="dropdown">
+            <a
+              href="#"
+              class="dropdown-toggle"
+              data-toggle="dropdown"
+              role="button"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              📚 History <span class="caret"></span>
+            </a>
+            <ul class="dropdown-menu history-dropdown">
+              <li class="dropdown-header">Recent Activity</li>
+              {% if search_history and search_history|length > 0 %} {% set
+              searches = [] %} {% set visits = [] %} {% for item in
+              search_history %} {% if item[1] in ['title', 'author'] %} {% set _
+              = searches.append(item) %} {% elif item[1] == 'visit' %} {% set _
+              = visits.append(item) %} {% endif %} {% endfor %} {% if visits %}
+              <li class="dropdown-subheader">📖 Recent Visits</li>
+              {% for item in visits %}
+              <li>
+                <a
+                  href="#"
+                  class="history-item"
+                  data-type="visit"
+                  data-book="{{ item[0] }}"
+                >
+                  <span class="history-type">📖 {{ item[0] }}</span>
+                  <small class="history-time">{{ item[2] }}</small>
+                </a>
+              </li>
+              {% endfor %} {% endif %} {% if searches %} {% if visits %}
+              <li role="separator" class="divider"></li>
+              {% endif %}
+              <li class="dropdown-subheader">🔍 Recent Searches</li>
+              {% for item in searches %}
+              <li>
+                <a
+                  href="#"
+                  class="history-item"
+                  data-type="{{ item[1] }}"
+                  data-query="{{ item[0] }}"
+                >
+                  <span class="history-type">
+                    {% if item[1] == 'title' %}🔍 Search: "{{ item[0] }}"{% else
+                    %}👤 Author: "{{ item[0] }}"{% endif %}
+                  </span>
+                  <small class="history-time">{{ item[2] }}</small>
+                </a>
+              </li>
+              {% endfor %} {% endif %} {% if search_history and
+              search_history|length > 0 %}
+              <li role="separator" class="divider"></li>
+              <li><a href="#" id="clear-history">🗑️ Clear History</a></li>
+              {% endif %} {% else %}
+              <li style="padding: 15px 20px; text-align: center">
+                <span class="text-muted" style="font-size: 1rem"
+                  >No recent activity</span
+                >
+              </li>
+              <li style="padding: 0 20px 15px 20px; text-align: center">
+                <small class="text-muted" style="font-size: 0.9rem"
+                  >Start searching or visiting books to see your history
+                  here!</small
+                >
+              </li>
+              {% endif %}
+            </ul>
+          </li>
+          <li><a href="/profile">Profile</a></li>
+          <li><a href="/logout">Logout</a></li>
+          {% else %}
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register">Register</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+
+    <div class="hero-section">
+      <h1 class="hero-title">Discover Your Next Favorite Book</h1>
+      <p class="hero-subtitle">
+        Find personalized recommendations based on your reading preferences
+      </p>
+    </div>
+
+    <!-- Toast Container for Flash Messages (moved outside block content) -->
+    <div aria-live="polite" aria-atomic="true" style="position: fixed; top: 20px; right: 20px; min-width: 300px; z-index: 9999;">
+      <div id="flash-toast" class="alert" style="display: none;"></div>
+    </div>
+    <!-- Flash Messages (hidden, for toast JS) -->
+    <div id="hidden-flash-messages" style="display:none;">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'success' if category == 'success' else 'danger' if category == 'danger' else 'warning' }}" data-category="{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="main-container">
+      {% block content %}
+      <!-- Search Section -->
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">🔍 Search Books</h2>
+          <p class="section-subtitle">Find books by title or author</p>
+        </div>
+        <div class="section-content">
+          <div class="search-form">
+            <h3>Search for Books</h3>
+            <form method="POST" action="/">
+              <div class="row">
+                <div class="col-sm-12 col-md-4">
+                  <div class="form-group">
+                    <label for="search_type">Search by:</label>
+                    <select
+                      class="form-control search-dropdown"
+                      name="search_type"
+                      id="search_type"
+                    >
+                      <option value="title">Title</option>
+                      <option value="author">Author</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-5">
+                  <div class="form-group">
+                    <input
+                      name="search_query"
+                      id="search_query"
+                      type="text"
+                      class="form-control"
+                      placeholder="Enter search term..."
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                  <div class="form-group">
+                    <button type="submit" class="btn btn-search btn-block">
+                      Search
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Search Results Section -->
+      {% if search_results is not none %}
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">🔍 Search Results</h2>
+          <p class="section-subtitle">
+            Found {{ search_results|length }} book(s) matching "{{ search_query
+            }}"
+          </p>
+        </div>
+        <div class="section-content">
+          {% if search_results|length > 0 %}
+          <div class="books-grid">
+            {% for _, book in search_results.iterrows() %}
+            <div class="book-card">
+              <a href="/book_details/{{ book['Book-Title']|urlencode }}">
+                <img
+                  class="book-image"
+                  src="{{ book['Image-URL-M'] }}"
+                  alt="{{ book['Book-Title'] }}"
+                />
+                <div class="book-info">
+                  <div class="book-title">{{ book['Book-Title'] }}</div>
+                  <div class="book-author">by {{ book['Book-Author'] }}</div>
+                </div>
+              </a>
+              <form method="POST" action="/add_to_wishlist" style="margin-top: 10px; text-align: center;">
+                <input type="hidden" name="book_title" value="{{ book['Book-Title'] }}" />
+                <button type="submit" class="btn btn-add-wishlist">
+                  <span class="glyphicon glyphicon-heart"></span> Add to Wishlist
+                </button>
+              </form>
+            </div>
+            {% endfor %}
+          </div>
+          {% else %}
+          <div class="no-results">
+            <p>
+              No books found matching your search criteria. Try a different
+              search term.
+            </p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Your Personalized Recommendations -->
+      {% if session.get('user_id') and recommendations %}
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">🎯 Your Personalized Recommendations</h2>
+          <p class="section-subtitle">
+            Based on your review history and reading preferences
+          </p>
+        </div>
+        <div class="section-content">
+          <div class="books-grid">
+            {% for rec in recommendations %}
+            <a
+              href="/book_details/{{ rec[0]|urlencode }}"
+              class="book-card-link"
+            >
+              <div class="book-card">
+                <div class="book-image">
+                  <img src="{{ rec[3] }}" alt="{{ rec[0] }}" />
+                </div>
+                <div class="book-info">
+                  <h3 class="book-title">{{ rec[0] }}</h3>
+                  <p class="book-author">by {{ rec[2] }}</p>
+                  <div class="book-stats">
+                    <div class="match-info">
+                      Recommended based on overall review sentiment
+                    </div>
+                    {% if rec[4] > 0 %}
+                    <span class="sentiment-indicator sentiment-positive"
+                      >👍 Community Likes</span
+                    >
+                    {% elif rec[4] < 0 %}
+                  </div>
+                </div>
+                <form method="POST" action="/add_to_wishlist" style="margin-top: 10px; text-align: center;">
+                  <input type="hidden" name="book_title" value="{{ rec[0] }}" />
+                  <button type="submit" class="btn btn-add-wishlist">
+                    <span class="glyphicon glyphicon-heart"></span> Add to Wishlist
+                  </button>
+    <style>
+      .btn-add-wishlist {
+        background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+        color: #fff !important;
+        border: none;
+        border-radius: 25px;
+        padding: 10px 28px;
+        font-size: 1.08rem;
+        font-weight: 600;
+        margin-top: 8px;
+        margin-bottom: 5px;
+        box-shadow: 0 2px 8px rgba(255, 117, 140, 0.12);
+        transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+        outline: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .btn-add-wishlist:hover, .btn-add-wishlist:focus {
+        background: linear-gradient(135deg, #ff7eb3 0%, #ff758c 100%);
+        color: #fff !important;
+        transform: translateY(-2px) scale(1.04);
+        box-shadow: 0 6px 18px rgba(255, 117, 140, 0.18);
+        text-decoration: none;
+      }
+      .btn-add-wishlist .glyphicon-heart {
+        font-size: 1.2em;
+        margin-right: 4px;
+        color: #fff;
+      }
+    </style>
+                </form>
+              </div>
+            </a>
+                    <span class="sentiment-indicator sentiment-negative"
+                      >👎 Mixed Reviews</span
+                    >
+                    {% else %}
+                    <span class="sentiment-indicator sentiment-neutral"
+                      >📖 New Book</span
+                    >
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% elif session.get('user_id') %}
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">🎯 Your Personalized Recommendations</h2>
+          <p class="section-subtitle">
+            Based on your review history and reading preferences
+          </p>
+        </div>
+        <div class="section-content">
+          <div class="no-results">
+            <h3>No Recommendations Yet</h3>
+            <p>Start reviewing books to get personalized recommendations!</p>
+            <p style="color: #7f8c8d; font-style: italic">
+              The more books you review, the better your recommendations become!
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Recommendations Section -->
+      {% if recommendations %}
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">✨ Recommended For You</h2>
+          <p class="section-subtitle">Based on your book preference</p>
+        </div>
+        <div class="section-content">
+          <div class="books-grid">
+            {% for rec in recommendations %}
+            <div class="book-card">
+              <a href="/book_details/{{ rec[0]|urlencode }}">
+                <img class="book-image" src="{{ rec[3] }}" alt="{{ rec[0] }}" />
+                <div class="book-info">
+                  <div class="book-title">{{ rec[0] }}</div>
+                  <div class="book-author">by {{ rec[2] }}</div>
+                  <div class="match-info">
+                    Recommended based on overall review sentiment
+                  </div>
+                  {% if rec[4] > 0 %}
+                  <div class="sentiment-indicator sentiment-positive">
+                    😊 Positive Reviews
+                  </div>
+                  {% elif rec[4] < 0 %}
+                  <div class="sentiment-indicator sentiment-negative">
+                    😞 Mixed Reviews
+                  </div>
+                  {% else %}
+                  <div class="sentiment-indicator sentiment-neutral">
+                    😐 No Reviews Yet
+                  </div>
+                  {% endif %}
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Popular Books Section -->
+      <div class="section-card">
+        <div class="section-header">
+          <h2 class="section-title">⭐ Popular Books</h2>
+          <p class="section-subtitle">Most loved books by readers worldwide</p>
+        </div>
+        <div class="section-content">
+          <div class="books-grid">
+            {% for i in range(book_name|length) %}
+            <div class="book-card">
+              <a href="/book_details/{{ book_name[i]|urlencode }}">
+                <img
+                  class="book-image"
+                  src="{{ image[i] }}"
+                  alt="{{ book_name[i] }}"
+                />
+                <div class="book-info">
+                  <div class="book-title">{{ book_name[i] }}</div>
+                  <div class="book-author">by {{ author[i] }}</div>
+                  <div class="book-stats">
+                    <span class="book-rating">⭐ {{ "%.2f" % rating[i] }}</span>
+                    <span class="book-votes">👥 {{ votes[i] }}</span>
+                  </div>
+                </div>
+              </a>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div> <!-- End of main-container -->
+      {% endblock %}
+    <script>
+      // Toast/Popup for Flask flash messages
+      document.addEventListener("DOMContentLoaded", function () {
+        var hidden = document.getElementById("hidden-flash-messages");
+        if (hidden) {
+          var alerts = hidden.querySelectorAll(".alert");
+          var toast = document.getElementById("flash-toast");
+          var i = 0;
+          function showNextToast() {
+            if (i < alerts.length) {
+              var msg = alerts[i].innerText;
+              var cat = alerts[i].getAttribute("data-category");
+              toast.innerText = msg;
+              toast.className = "alert alert-" + (cat === "success" ? "success" : cat === "danger" ? "danger" : "warning");
+              toast.style.display = "block";
+              setTimeout(function () {
+                toast.style.display = "none";
+                i++;
+                showNextToast();
+              }, 3500);
+            } else {
+              // Clear hidden messages after showing
+              hidden.innerHTML = "";
+            }
+          }
+          if (alerts.length > 0) {
+            showNextToast();
+          }
+        }
+      });
+
+      // Ensure search dropdown displays properly
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchDropdown = document.getElementById("search_type");
+        if (searchDropdown) {
+          // Force minimum width and height
+          searchDropdown.style.minWidth = "200px";
+          searchDropdown.style.width = "100%";
+          searchDropdown.style.height = "50px";
+          searchDropdown.style.minHeight = "50px";
+
+          // Ensure options are visible when focused
+          searchDropdown.addEventListener("focus", function () {
+            this.style.minWidth = "250px";
+            this.style.width = "100%";
+            this.style.height = "50px";
+          });
+
+          // Maintain size when option is selected
+          searchDropdown.addEventListener("change", function () {
+            this.style.minWidth = "200px";
+            this.style.width = "100%";
+            this.style.height = "50px";
+            // Force a re-render to ensure text is visible
+            this.style.display = "none";
+            this.offsetHeight; // Trigger reflow
+            this.style.display = "block";
+          });
+
+          // Keep size when not focused
+          searchDropdown.addEventListener("blur", function () {
+            this.style.minWidth = "200px";
+            this.style.width = "100%";
+            this.style.height = "50px";
+          });
+        }
+
+        // History dropdown functionality
+        const historyItems = document.querySelectorAll(".history-item");
+        historyItems.forEach((item) => {
+          item.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const type = this.getAttribute("data-type");
+            const query = this.getAttribute("data-query");
+            const book = this.getAttribute("data-book");
+
+            if (type === "visit" && book) {
+              // Redirect to book details page
+              window.location.href =
+                "/book_details/" + encodeURIComponent(book);
+            } else if (type === "title" && query) {
+              // Fill search form with title search
+              const searchTypeSelect = document.getElementById("search_type");
+              const searchInput = document.getElementById("search_query");
+
+              if (searchTypeSelect && searchInput) {
+                searchTypeSelect.value = "title";
+                searchInput.value = query;
+                document.querySelector("form").submit();
+              }
+            } else if (type === "author" && query) {
+              // Fill search form with author search
+              const searchTypeSelect = document.getElementById("search_type");
+              const searchInput = document.getElementById("search_query");
+
+              if (searchTypeSelect && searchInput) {
+                searchTypeSelect.value = "author";
+                searchInput.value = query;
+                document.querySelector("form").submit();
+              }
+            }
+          });
+        });
+
+        // Clear history functionality
+        const clearHistoryBtn = document.getElementById("clear-history");
+        if (clearHistoryBtn) {
+          clearHistoryBtn.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (
+              confirm(
+                "Are you sure you want to clear your search history? This action cannot be undone."
+              )
+            ) {
+              fetch("/clear_search_history", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => response.json())
+                .then((data) => {
+                  if (data.success) {
+                    // Reload the page to update the history
+                    location.reload();
+                  } else {
+                    alert("Failed to clear history: " + data.message);
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                  alert("An error occurred while clearing history");
+                });
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

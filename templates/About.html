@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About Us - Book Recommender</title>
+    <link rel="icon" href="templates/open-book.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: none;
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #2c3e50 !important;
+            text-decoration: none;
+        }
+        
+        .nav > li > a {
+            color: #34495e !important;
+            font-weight: 500;
+            padding: 10px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav > li > a:hover {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db !important;
+        }
+        
+        .main-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        
+        .about-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+        
+        .about-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+        
+        .about-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .about-subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+        
+        .about-content {
+            padding: 50px 40px;
+        }
+        
+        .about-section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+        
+        .section-text {
+            font-size: 1.1rem;
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .feature-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            border-left: 4px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .feature-description {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .stats-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .stats-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .cta-section {
+            background: #f8f9fa;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .cta-text {
+            font-size: 1.1rem;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+            display: inline-block;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .about-title {
+                font-size: 2.5rem;
+            }
+            
+            .about-content {
+                padding: 30px 20px;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-container {
+                padding: 0 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="/">📚 Book Recommender</a>
+            </div>
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                <li><a href="/About">About</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                {% if session.get('user_id') %}
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                {% else %}
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="about-card">
+            <div class="about-header">
+                <h1 class="about-title">About Book Recommender</h1>
+                <p class="about-subtitle">Your ultimate destination for discovering your next favorite book</p>
+            </div>
+            
+            <div class="about-content">
+                <div class="about-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">📚</span>
+                        Our Mission
+                    </h2>
+                    <p class="section-text">
+                        Welcome to the Book Recommender System, your ultimate destination for discovering your next favorite book! 
+                        Our platform is designed with one goal in mind: to help you uncover hidden literary gems that perfectly 
+                        match your interests and preferences. With a vast database of books spanning various genres and topics, 
+                        we leverage advanced algorithms to analyze your reading history and provide tailored recommendations 
+                        that are sure to captivate and inspire.
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🎯</span>
+                        What We Do
+                    </h2>
+                    <p class="section-text">
+                        At Book Recommender System, we understand the importance of finding the right book at the right time. 
+                        Whether you're seeking thrilling mysteries, heartwarming romances, or thought-provoking non-fiction, 
+                        our system is here to guide you on your reading journey. With personalized recommendations based on 
+                        your unique tastes, you can spend less time searching and more time immersed in the pages of captivating stories.
+                    </p>
+                </div>
+
+                <div class="about-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">✨</span>
+                        Key Features
+                    </h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <h3 class="feature-title">🔍 Smart Search</h3>
+                            <p class="feature-description">
+                                Search through thousands of books by title or author with our intuitive search functionality.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">🎯 Personalized Recommendations</h3>
+                            <p class="feature-description">
+                                Get book suggestions tailored to your reading preferences and past reviews.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">⭐ Popular Books</h3>
+                            <p class="feature-description">
+                                Discover the most loved books based on ratings and reviews from readers worldwide.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">💬 Review System</h3>
+                            <p class="feature-description">
+                                Share your thoughts and read reviews from other readers to make informed decisions.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">📊 Sentiment Analysis</h3>
+                            <p class="feature-description">
+                                Our advanced AI analyzes review sentiments to provide better recommendations.
+                            </p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-title">👤 User Profiles</h3>
+                            <p class="feature-description">
+                                Track your reading history, reviews, and personalized recommendations in one place.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-section">
+                    <h2 class="stats-title">📈 Our Impact</h2>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number">10K+</div>
+                            <div class="stat-label">Books Available</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">50K+</div>
+                            <div class="stat-label">Reviews Analyzed</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">95%</div>
+                            <div class="stat-label">User Satisfaction</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number">24/7</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-section">
+                    <h2 class="section-title">
+                        <span class="section-icon">🚀</span>
+                        How It Works
+                    </h2>
+                    <p class="section-text">
+                        Our recommendation system uses advanced machine learning algorithms to analyze your reading preferences. 
+                        When you review books, our sentiment analysis engine understands your preferences and suggests similar 
+                        books that match your taste. The more you interact with our platform, the better our recommendations become.
+                    </p>
+                </div>
+
+                <div class="cta-section">
+                    <h2 class="cta-title">Ready to Start Your Reading Journey?</h2>
+                    <p class="cta-text">
+                        Join thousands of readers who have discovered their new favorite books through our platform. 
+                        Let us be your trusted companion as you explore the endless possibilities of literature and 
+                        embark on unforgettable reading adventures!
+                    </p>
+                    {% if not session.get('user_id') %}
+                        <a href="/register" class="cta-button">Get Started Today</a>
+                    {% else %}
+                        <a href="/" class="cta-button">Explore Books</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
